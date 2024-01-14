@@ -1,0 +1,12 @@
+TODO
+언어별 - 품사와 문장성분 등을 분리하는 모델을 만들어야함
+- 품사: 명사 대명사 동사 형용사 부사 접속사 전치사 감탄사
+- 문장성분: 주어 동사 목적어 보어 수식어
+- 한국어 용언 분석기 https://github.com/lovit/korean_lemmatizer
+- 자연어 처리 https://github.com/lovit/soynlp
+- https://github.com/bab2min/Kiwi
+형태소만 분리해서는 안될듯..
+사용자의 목적을 알아내야될듯..
+6하원칙 알아내기?
+권유문 명령문
+평서문, 감탄문, 의문문, 명령문, 청유문
