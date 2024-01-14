@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.webEngineView, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 807, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
         self.menuChat = QtWidgets.QMenu(parent=self.menubar)
         self.menuChat.setObjectName("menuChat")

@@ -1,6 +1,9 @@
 import sys
 import os
+import threading
+import time
 
+import pyautogui
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QApplication
 
@@ -11,7 +14,7 @@ from windows import MainWindow
 version = '1.0'
 
 
-class MiniVoice:
+class Frainds:
     mainWindow = None
     qapp = None
     voiceCmdr = None
@@ -26,10 +29,10 @@ class MiniVoice:
         self.mainWindow = MainWindow(self.dataAcc)
         self.mainWindow.show()
 
-        # self.voiceCmdr = VoiceCommander()
-        # self.voiceCmdr.sign_command.connect(self.command_handle)
-        # self.voiceCmdr.sign_model_loaded.connect(self.mainWindow.moveToChatAI)
-        # self.voiceCmdr.start()
+        self.voiceCmdr = VoiceCommander()
+        self.voiceCmdr.sign_command.connect(self.command_handle)
+        self.voiceCmdr.sign_model_loaded.connect(self.mainWindow.moveToChatAI)
+        self.voiceCmdr.start()
 
     def command_handle(self, command_type, data):
         if command_type == 'exit':
@@ -54,13 +57,16 @@ class MiniVoice:
             self.voiceCmdr.stop()
         return _exec
 
+def mousePoint():
+    pyautogui.mouseInfo()
 
 if __name__ == "__main__":
+    threading.Thread(target=mousePoint, daemon=True).start()
     try:
         os.chdir(sys._MEIPASS)
         print(sys._MEIPASS)
     except:
         os.chdir(os.getcwd())
 
-    app = MiniVoice()
+    app = Frainds()
     sys.exit(app.exec())

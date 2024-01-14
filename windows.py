@@ -33,6 +33,8 @@ class MainWindow(QMainWindow):
 
     dataAcc = None
 
+    tempMousePosition = None
+
     def __init__(self, data_acc):
         super().__init__()
         # self.setupUi(self)
@@ -116,7 +118,7 @@ class MainWindow(QMainWindow):
 
     def get_textinput_position(self):
         if self.chatai == 'chatGPT':
-            return 120, 30
+            return 120, 25
         elif self.chatai == 'bard':
             return 170, 60
         elif self.chatai == 'clova-x':
@@ -130,17 +132,27 @@ class MainWindow(QMainWindow):
         elif self.chatai == 'clova-x':
             return 95, 60
 
+    def get_window_size(self):
+        ratio = self.devicePixelRatio()
+        if ratio == 0:
+            ratio = 1
+        w = self.width() * ratio
+        h = self.height() * ratio
+        return w, h
+
     def findInputLocation(self):
         x, y = self.get_textinput_position()
-        clickX = self.x() + self.width() - x
-        clickY = self.y() + self.height() - y
+        w, h = self.get_window_size()
+        clickX = self.x() + w - x
+        clickY = self.y() + h - y
         pyautogui.moveTo(clickX, clickY)
-        # pyautogui.click()
-        print(f'Input location click x:{self.x()}, y:{self.y()}, width:{self.width()}, height:{self.height()}, clickX:{clickX}, clickY:{clickY}')
+        pyautogui.click()
+        # print(f'Input location click x:{self.x()}, y:{self.y()}, width:{self.width()}, height:{self.height()}, clickX:{clickX}, clickY:{clickY}')
 
 
     def searchAi(self, data):
         print('searchAi!!')
+        self.tempMousePosition = pyautogui.position()
         self.activateWindow()
         clipboard.copy(data)
         self.check_chatai_logined()
@@ -152,30 +164,18 @@ class MainWindow(QMainWindow):
             return
         self.findInputLocation()
         # time.sleep(1)
-        pyautogui.hotkey('ctrl', 'v')
-        self.findInputLocation()
-        # time.sleep(1)
-        # pyautogui.write(data, interval=0.1)
+        self.delayHotKey(100, 'ctrl', 'v')
+        self.delayKey(200, 'enter')
+        # mouse position 원복
+        pyautogui.moveTo(self.tempMousePosition)
 
-        # time.sleep(2)
-        x, y = self.get_searchbutton_position()
-        clickX = self.x() + self.width() - x
-        clickY = self.y() + self.height() - y
-        pyautogui.moveTo(clickX, clickY)
-        print(f'Button location x:{clickX}, y:{clickY}')
-        # time.sleep(2)
-        # pyautogui.click()
-        # time.sleep(2)
-        # setTimeout(self.delayClick, 2000, clickX, clickY)
-        # pyautogui.moveTo(clickX+1, clickY)
-        # pyautogui.click()
-        # setTimeout(self.delayKeyPress, 2000, 'enter')
+    def delayHotKey(self, ms, key1, key2):
+        print('delayHotKey ', key1, key2)
+        setTimeout(pyautogui.hotkey, ms, key1, key2)
 
-
-
-    def delayKeyPress(self, key):
-        print('delayKeyPress ', key)
-        pyautogui.press(key)
+    def delayKey(self, ms, key):
+        print('delayKey ', key)
+        setTimeout(pyautogui.press, ms, key)
 
     def delayClick(self, clickX, clickY):
         print('delayClick ', clickX, clickY)
@@ -191,4 +191,5 @@ class MainWindow(QMainWindow):
         print(self.webEngineView.url())
         # cookie = webview.page().profile()
         # if cookie is not None:
+
         #     print("results:", cookie.name(), cookie.value(), cookie.toRawForm())
