@@ -158,12 +158,12 @@ class MainWindow(QMainWindow):
         self.delayKey(300, 'enter')
         # mouse position 원복
         pyautogui.moveTo(self.tempMousePosition)
-        # 클립보드 원복
-        clipboard.copy(self.temp_clipboard_data)
 
     def delayHotKey(self, ms, key1, key2):
         # print('delayHotKey ', key1, key2)
         setTimeout(pyautogui.hotkey, ms, key1, key2)
+        # 클립보드 원복
+        setTimeout(clipboard.copy, ms+300, self.temp_clipboard_data)
 
     def delayKey(self, ms, key):
         # print('delayKey ', key)
