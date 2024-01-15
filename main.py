@@ -14,7 +14,7 @@ from utils import has
 from voicerec import VoiceRecognition
 from windows import MainWindow
 
-version = '1.0'
+__version__ = '0.1'
 
 
 class Frainds:
@@ -36,7 +36,7 @@ class Frainds:
     keep_goning_chat = False
 
     def __init__(self):
-        print(f'frainds v{version}')
+        print(f'frainds v{__version__}')
         # mini voice bot?
         # min vot?
         self.dataAcc = DataAccess()
