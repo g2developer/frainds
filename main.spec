@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('venv/Lib/site-packages/whisper/assets/*.*', 'whisper/assets',),],
+    datas=[('venv/Lib/site-packages/whisper/assets/*.*', 'whisper/assets',),('data/*.*', 'data',),('html/*.*', 'html',)],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
