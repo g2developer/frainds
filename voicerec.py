@@ -1,4 +1,3 @@
-import asyncio
 import queue
 import sys
 import threading
@@ -10,7 +9,6 @@ import speech_recognition as sr
 import torch
 import whisper
 from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtWidgets import QApplication
 
 from windows import VoiceTextWindow
 
@@ -50,16 +48,23 @@ class VoiceRecognition(QObject):
 
     ai_chatting = False
 
-    def __init__(self):
+    start_on_mic = False
+    # model_name = 'large-v3'
+    model_name = 'base'
+
+    def __init__(self, mic_start):
         super().__init__()
+        self.start_on_mic = mic_start
         self.banned_results = ["", " ", "\n", None]
         self.platform = platform.system()
+
+        self.voiceTextWin = VoiceTextWindow()
+        self.voiceTextWin.show()
 
         self.setup_mic()
         self.setup_recognizer()
         threading.Thread(target=self.setup_speech_model, daemon=True).start()
 
-        self.voiceTextWin = VoiceTextWindow()
         # self.voiceTextWin.show()
 
 
@@ -78,7 +83,7 @@ class VoiceRecognition(QObject):
         # print(sr.Microphone.list_microphone_names())
         self.mic_index = 0
 
-    def setup_speech_model(self, model_name='base'):
+    def setup_speech_model(self):
     # def setup_speech_model(self, model_name='large-v3'):
         # device = ("cuda" if torch.cuda.is_available() else "cpu")
         # if self.platform == "darwin":
@@ -90,10 +95,12 @@ class VoiceRecognition(QObject):
         # self.speech_model = whisper.load_model(model_name, download_root=model_download_root).to(device)
 
         # default model setting
-        self.speech_model = whisper.load_model(model_name)
-        print('setup speech model ' + model_name)
+        self.speech_model = whisper.load_model(self.model_name)
+        print('setup speech model ' + self.model_name)
         self.voiceTextWin.set_text('')
         self.sign_model_loaded.emit()
+        if self.start_on_mic:
+            self.start()
 
     # 말이 한번 끝난 경우 이 함수가 호출됨
     def __listen_callback(self, _, audio: sr.AudioData) -> None:

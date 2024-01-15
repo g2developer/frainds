@@ -1,30 +1,20 @@
-import time
-from threading import Timer
-
 import clipboard
 import pyautogui
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
-from PyQt6.QtNetwork import QNetworkCookie
-from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineCookieStore, QWebEngineProfile, qWebEngineChromiumVersion
+from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineProfile
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 
-from PyQt6 import uic, QtGui, QtCore, QtWidgets
+from PyQt6 import QtGui, QtCore, QtWidgets
 
 from ui.mainwindow import Ui_MainWindow
-from ui.voicetextwidget import Ui_VoiceTextWidget
 from ui.voicetextwindow import Ui_VoiceTextWindow
 
-
-def setTimeout(fn, ms, *args, **kwargs):
-    t = Timer(ms / 1000., fn, args=args, kwargs=kwargs)
-    t.start()
-    return t
+from utils import setTimeout
 
 
-# class MainWindow(QMainWindow, form_class):
 class MainWindow(QMainWindow):
     webEngineProfile = None
     webEngineView: QWebEngineView = None
@@ -64,8 +54,6 @@ class MainWindow(QMainWindow):
         page: QWebEnginePage = QWebEnginePage(self.webEngineProfile, self)
         self.webEngineView.setPage(page)
         # webview.loadFinished.connect(self.loadFinished)
-
-        self.ui.testButton.clicked.connect(lambda : self.searchAi('소프트웨어의 정의에 대해서 찾아줘'))
 
     def set_chatai(self):
         if self.dataAcc:
@@ -166,8 +154,8 @@ class MainWindow(QMainWindow):
             return
         self.findInputLocation()
         # time.sleep(1)
-        self.delayHotKey(100, 'ctrl', 'v')
-        self.delayKey(200, 'enter')
+        self.delayHotKey(10, 'ctrl', 'v')
+        self.delayKey(10, 'enter')
         # mouse position 원복
         pyautogui.moveTo(self.tempMousePosition)
 
@@ -222,30 +210,6 @@ class VoiceTextWindow(QMainWindow):
         x, y = int(screen.width() - w - 10), int(screen.height() - h - 30)
         self.setGeometry(x, y, self.width(), self.height())
 
-# class VoiceTextWidget(QtWidgets.QWidget):
-#
-#     def __init__(self):
-#         super().__init__()
-#         self.ui = Ui_VoiceTextWidget()
-#         self.ui.setupUi(self)
-#         self.set_window()
-#         self.ui.label.setStyleSheet('color: white')
-#
-#     def set_text(self, txt):
-#         self.ui.label.setText(txt)
-#
-#     def set_window(self):
-#         self.setWindowFlag(QtCore.Qt.WindowType.FramelessWindowHint|QtCore.Qt.WindowType.WindowStaysOnTopHint)
-#         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_NoSystemBackground, True)
-#         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
-#
-#         # location on screen
-#         r = self.devicePixelRatio()
-#         w, h = self.width()*r, self.height()*r
-#
-#         screen: QRect = QGuiApplication.primaryScreen().geometry()
-#         x, y = int(screen.width() - w - 10), int(screen.height() - h - 30)
-#         self.setGeometry(x, y, self.width(), self.height())
 
 if __name__ == "__main__":
     import sys

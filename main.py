@@ -19,6 +19,7 @@ version = '1.0'
 
 class Frainds:
     language = 'en'
+    _name = 'frainds'
     qapp = None
     mainWindow = None
 
@@ -32,7 +33,7 @@ class Frainds:
     websearch = WebSearch()
 
     # ai와 chatting 중인지?
-    is_ai_chatting = False
+    keep_goning_chat = False
 
     def __init__(self):
         print(f'frainds v{version}')
@@ -40,6 +41,7 @@ class Frainds:
         # min vot?
         self.dataAcc = DataAccess()
         self.language = self.dataAcc.get_config_value('language')
+        self._name = self.dataAcc.get_config_value('_name')
 
         self.qapp = QApplication(sys.argv)
         self.mainWindow = MainWindow(self.dataAcc)
@@ -47,14 +49,16 @@ class Frainds:
         self.mainWindow.ui.actionVoice_recognition.triggered.connect(self.toggle_voice_rec)
         config_mic = self.dataAcc.get_config_value('mic')
         self.mainWindow.ui.actionVoice_recognition.setChecked(config_mic == 'on')
+        self.mainWindow.ui.actionkeep_going_chat.triggered.connect(self.set_keep_goning_chat)
+        self.mainWindow.ui.checkBox.stateChanged.connect(self.set_keep_goning_chat)
+        self.mainWindow.ui.actionExit.triggered.connect(self.exit)
 
         self.command = Command(self.dataAcc)
 
-        self.voiceRec = VoiceRecognition()
+        self.voiceRec = VoiceRecognition(config_mic == 'on')
         self.voiceRec.sign_listen.connect(self.listen_handle)
         self.voiceRec.sign_model_loaded.connect(self.mainWindow.moveToChatAI)
-        if config_mic == 'on':
-            self.voiceRec.start()
+
 
     def toggle_voice_rec(self, flag):
         print('toggle_voice_rec :', flag)
@@ -66,20 +70,27 @@ class Frainds:
         self.dataAcc.update_config('mic', 'on' if flag else 'off')
 
 
+    def set_keep_goning_chat(self, flag):
+        self.keep_goning_chat = flag
+        self.mainWindow.ui.actionkeep_going_chat.setChecked(flag)
+        self.mainWindow.ui.checkBox.setChecked(flag)
+
     def listen_handle(self, txt):
         cmm_type, data = self.command.find_command(txt)
         print('커맨드 타입:', cmm_type)
         if not cmm_type:
-            if self.is_ai_chatting:
+            if self.keep_goning_chat:
                 self.mainWindow.searchAi(data)
             return
         if cmm_type == 'exit':
             self.exit()
+        elif has(cmm_type, 'call_me'):
+            self.mainWindow.activateWindow()
         elif has(cmm_type, 'chat_ai'):
             if has(cmm_type, ['off', 'stop']):
-                self.is_ai_chatting = False
+                self.set_keep_goning_chat(False)
             else:
-                self.is_ai_chatting = True
+                self.set_keep_goning_chat(True)
                 self.mainWindow.searchAi(data)
         elif cmm_type == 'search_web':
             self.websearch.action(data)

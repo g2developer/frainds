@@ -28,11 +28,21 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QPushButton" name="testButton">
-      <property name="text">
-       <string>PushButton</string>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>9</number>
       </property>
-     </widget>
+      <property name="rightMargin">
+       <number>9</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string>keep chat going</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item row="1" column="0">
      <widget class="QWebEngineView" name="webEngineView">
@@ -70,9 +80,17 @@
      <string>Voice</string>
     </property>
     <addaction name="actionVoice_recognition"/>
+    <addaction name="actionkeep_going_chat"/>
    </widget>
-   <addaction name="menuChat"/>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuFile"/>
    <addaction name="menuVoice"/>
+   <addaction name="menuChat"/>
   </widget>
   <action name="actionchat1">
    <property name="text">
@@ -93,6 +111,19 @@
    </property>
    <property name="text">
     <string>Voice recognition</string>
+   </property>
+  </action>
+  <action name="actionkeep_going_chat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Keep going Chat</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
