@@ -1,1 +1,3 @@
 python -m PyQt6.uic.pyuic -x MainWindow.ui -o mainwindow.py
+python -m PyQt6.uic.pyuic -x VoiceTextWindow.ui -o voicetextwindow.py
+python -m PyQt6.uic.pyuic -x VoiceTextWidget.ui -o voicetextwidget.py

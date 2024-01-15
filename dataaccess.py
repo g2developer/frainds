@@ -4,8 +4,13 @@ import sqlite3
 class DataAccess:
     conn = None
 
+    cmm_lst = None
+    cmm_target_lst = None
+
     def __init__(self):
         self.conn = sqlite3.connect('./data/config.db')
+        self.get_command_list()
+        self.get_command_target_list()
 
     def get_config_value(self, config_name):
         lst = self.conn.cursor().execute(f'''
@@ -35,6 +40,17 @@ class DataAccess:
             self.conn.commit()
         except Exception as e:
             print(e)
+
+    def get_command_list(self):
+        self.cmm_lst = self.conn.cursor().execute(f'''
+        SELECT * FROM command
+        ''').fetchall()
+
+    def get_command_target_list(self):
+        self.cmm_target_lst = self.conn.cursor().execute(f'''
+        SELECT * FROM command_target
+        ''').fetchall()
+
 
     def close(self):
         self.conn.close()

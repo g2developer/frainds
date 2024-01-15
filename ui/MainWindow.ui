@@ -51,7 +51,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuChat">
@@ -65,7 +65,14 @@
     </widget>
     <addaction name="menuType"/>
    </widget>
+   <widget class="QMenu" name="menuVoice">
+    <property name="title">
+     <string>Voice</string>
+    </property>
+    <addaction name="actionVoice_recognition"/>
+   </widget>
    <addaction name="menuChat"/>
+   <addaction name="menuVoice"/>
   </widget>
   <action name="actionchat1">
    <property name="text">
@@ -75,6 +82,17 @@
   <action name="actionchat2">
    <property name="text">
     <string>chat2</string>
+   </property>
+  </action>
+  <action name="actionVoice_recognition">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Voice recognition</string>
    </property>
   </action>
  </widget>

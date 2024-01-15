@@ -11,9 +11,11 @@ from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineCookieStore, QWebEng
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 
-from PyQt6 import uic, QtGui, QtCore
+from PyQt6 import uic, QtGui, QtCore, QtWidgets
 
 from ui.mainwindow import Ui_MainWindow
+from ui.voicetextwidget import Ui_VoiceTextWidget
+from ui.voicetextwindow import Ui_VoiceTextWindow
 
 
 def setTimeout(fn, ms, *args, **kwargs):
@@ -170,15 +172,15 @@ class MainWindow(QMainWindow):
         pyautogui.moveTo(self.tempMousePosition)
 
     def delayHotKey(self, ms, key1, key2):
-        print('delayHotKey ', key1, key2)
+        # print('delayHotKey ', key1, key2)
         setTimeout(pyautogui.hotkey, ms, key1, key2)
 
     def delayKey(self, ms, key):
-        print('delayKey ', key)
+        # print('delayKey ', key)
         setTimeout(pyautogui.press, ms, key)
 
     def delayClick(self, clickX, clickY):
-        print('delayClick ', clickX, clickY)
+        # print('delayClick ', clickX, clickY)
         pyautogui.moveTo(clickX + 1, clickY)
         pyautogui.click()
 
@@ -193,3 +195,61 @@ class MainWindow(QMainWindow):
         # if cookie is not None:
 
         #     print("results:", cookie.name(), cookie.value(), cookie.toRawForm())
+
+
+class VoiceTextWindow(QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_VoiceTextWindow()
+        self.ui.setupUi(self)
+        self.set_window()
+        self.ui.label.setStyleSheet('color: white')
+
+    def set_text(self, txt):
+        self.ui.label.setText(txt)
+
+    def set_window(self):
+        self.setWindowFlag(QtCore.Qt.WindowType.FramelessWindowHint|QtCore.Qt.WindowType.WindowStaysOnTopHint)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_NoSystemBackground, True)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
+
+        # location on screen
+        r = self.devicePixelRatio()
+        w, h = self.width()*r, self.height()*r
+
+        screen: QRect = QGuiApplication.primaryScreen().geometry()
+        x, y = int(screen.width() - w - 10), int(screen.height() - h - 30)
+        self.setGeometry(x, y, self.width(), self.height())
+
+# class VoiceTextWidget(QtWidgets.QWidget):
+#
+#     def __init__(self):
+#         super().__init__()
+#         self.ui = Ui_VoiceTextWidget()
+#         self.ui.setupUi(self)
+#         self.set_window()
+#         self.ui.label.setStyleSheet('color: white')
+#
+#     def set_text(self, txt):
+#         self.ui.label.setText(txt)
+#
+#     def set_window(self):
+#         self.setWindowFlag(QtCore.Qt.WindowType.FramelessWindowHint|QtCore.Qt.WindowType.WindowStaysOnTopHint)
+#         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_NoSystemBackground, True)
+#         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground, True)
+#
+#         # location on screen
+#         r = self.devicePixelRatio()
+#         w, h = self.width()*r, self.height()*r
+#
+#         screen: QRect = QGuiApplication.primaryScreen().geometry()
+#         x, y = int(screen.width() - w - 10), int(screen.height() - h - 30)
+#         self.setGeometry(x, y, self.width(), self.height())
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    VoiceTextWindow = VoiceTextWindow()
+    VoiceTextWindow.show()
+    sys.exit(app.exec())

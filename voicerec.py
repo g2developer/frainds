@@ -12,13 +12,20 @@ import whisper
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QApplication
 
+from windows import VoiceTextWindow
 
-class VoiceCommander(QObject):
+
+class VoiceRecognition(QObject):
+    language = 'ko'
+
+    voiceTextWin = None
     platform = None
 
     # 명령 전달 (type:str, data:str)
-    sign_command = pyqtSignal(str, str)
     sign_model_loaded = pyqtSignal()
+    sign_command = pyqtSignal(str, str)
+    sign_listen = pyqtSignal(str)
+    sign_voice_recgnized = pyqtSignal(str)
 
     recognizer = None
 
@@ -41,12 +48,20 @@ class VoiceCommander(QObject):
     # speech model
     speech_model = None
 
+    ai_chatting = False
+
     def __init__(self):
         super().__init__()
         self.banned_results = ["", " ", "\n", None]
         self.platform = platform.system()
-        self.audio_queue = queue.Queue()
-        self.result_queue: queue.Queue[str] = queue.Queue()
+
+        self.setup_mic()
+        self.setup_recognizer()
+        threading.Thread(target=self.setup_speech_model, daemon=True).start()
+
+        self.voiceTextWin = VoiceTextWindow()
+        # self.voiceTextWin.show()
+
 
     def setup_recognizer(self):
         self.audio_source = sr.Microphone(sample_rate=16000, device_index=self.mic_index)
@@ -77,6 +92,7 @@ class VoiceCommander(QObject):
         # default model setting
         self.speech_model = whisper.load_model(model_name)
         print('setup speech model ' + model_name)
+        self.voiceTextWin.set_text('')
         self.sign_model_loaded.emit()
 
     # 말이 한번 끝난 경우 이 함수가 호출됨
@@ -108,11 +124,16 @@ class VoiceCommander(QObject):
         while self.recording:
             audio_data = self.__get_audio_data()
             audio_data = self.__preprocess(audio_data)
-            result = self.speech_model.transcribe(audio_data)
+            if not self.speech_model:
+                print('아직 모델을 로드중입니다.')
+                self.voiceTextWin.set_text('모델을 로드중입니다.')
+                continue
+            result = self.speech_model.transcribe(audio_data, language=self.language)
             predicted_text = result["text"]
 
             if predicted_text not in self.banned_results:
                 self.result_queue.put_nowait(predicted_text)
+                self.voiceTextWin.set_text(predicted_text)
 
 
 
@@ -121,11 +142,10 @@ class VoiceCommander(QObject):
             return
 
         print('듣고 있어요')
-        self.recording = True
         while self.recording:
             txt = self.result_queue.get()
             print(txt)
-            self.command(txt)
+            self.sign_listen.emit(txt)
 
         print('듣기 끝..')
 
@@ -133,40 +153,31 @@ class VoiceCommander(QObject):
     def start(self):
         if not self.enabled:
             return
+        if self.recording:
+            return
         print('start recording')
+        self.recording = True
+        self.audio_queue = queue.Queue()
+        self.result_queue: queue.Queue[str] = queue.Queue()
 
-        self.setup_mic()
-        self.setup_recognizer()
-        self.setup_speech_model()
         self.recognizer_stopper = self.recognizer.listen_in_background(self.audio_source, self.__listen_callback)
         self.thread_recorder = threading.Thread(target=self.listen, daemon=True)
         self.thread_recorder.start()
         self.thread_transcribe = threading.Thread(target=self.__transcribe, daemon=True)
         self.thread_transcribe.start()
         # self.listen()
+        self.voiceTextWin.show()
 
     def stop(self):
+        if not self.recording:
+            return
         self.recording = False
+        self.voiceTextWin.hide()
         # self.thread_recorder.join()
         # self.thread_transcribe.join()
-        # self.recognizer_stopper(True)
+        self.recognizer_stopper(True)
         # self.result_queue.join()
         # self.audio_queue.join()
         print('stop recording ', self.thread_recorder.is_alive())
 
-    def command(self, txt):
-        # print(f'커맨드를 찾습니다. |{txt}|')
-        if txt.find('종료') > -1 or txt.find('끝내') > -1:
-            print('종료 커맨드')
-            self.sign_command.emit('exit', '')
 
-        elif txt.find('찾아') > -1 or txt.find('알려줘') > -1 or txt.find('검색') > -1 or txt.find('계속해') > -1:
-            print('찾기 커맨드')
-            self.sign_command.emit('search', txt)
-
-        # else:
-        #     self.sign_command.emit('search', txt)
-        #     print('찾기 커맨드')
-
-    def findCommand(self, txt):
-        pass
