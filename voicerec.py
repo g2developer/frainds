@@ -1,10 +1,9 @@
-import queue
-import sys
-import threading
 import platform
+import queue
+import threading
 import time
-import numpy as np
 
+import numpy as np
 import speech_recognition as sr
 import torch
 import whisper

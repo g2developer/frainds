@@ -1,10 +1,6 @@
-import sys
 import os
-import threading
-import time
+import sys
 
-import pyautogui
-from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QApplication
 
 from actions.websearch import WebSearch

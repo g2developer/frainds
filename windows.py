@@ -1,17 +1,14 @@
 import clipboard
 import pyautogui
+from PyQt6 import QtGui, QtCore, QtWidgets
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineProfile
-
-from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-
-from PyQt6 import QtGui, QtCore, QtWidgets
+from PyQt6.QtWidgets import QMainWindow, QMessageBox
 
 from ui.mainwindow import Ui_MainWindow
 from ui.voicetextwindow import Ui_VoiceTextWindow
-
 from utils import setTimeout
 
 

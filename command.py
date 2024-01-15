@@ -35,7 +35,6 @@ class Command:
 
 
 if __name__ == "__main__":
-    import sys
     dataAcc = DataAccess()
     cmm = Command(dataAcc)
     cmmtype, txt = cmm.find_command('구글에서 파이썬으로 프로그램만드는 법 좀 찾아줘')
