@@ -24,6 +24,8 @@ class MainWindow(QMainWindow):
 
     tempMousePosition = None
 
+    temp_clipboard_data = None
+
     def __init__(self, data_acc):
         super().__init__()
         # self.setupUi(self)
@@ -141,6 +143,7 @@ class MainWindow(QMainWindow):
         print('searchAi!!')
         self.tempMousePosition = pyautogui.position()
         self.activateWindow()
+        self.temp_clipboard_data = clipboard.paste()
         clipboard.copy(data)
         self.check_chatai_logined()
 
@@ -152,9 +155,11 @@ class MainWindow(QMainWindow):
         self.findInputLocation()
         # time.sleep(1)
         self.delayHotKey(10, 'ctrl', 'v')
-        self.delayKey(10, 'enter')
+        self.delayKey(300, 'enter')
         # mouse position 원복
         pyautogui.moveTo(self.tempMousePosition)
+        # 클립보드 원복
+        clipboard.copy(self.temp_clipboard_data)
 
     def delayHotKey(self, ms, key1, key2):
         # print('delayHotKey ', key1, key2)
