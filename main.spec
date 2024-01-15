@@ -20,7 +20,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='mini voice',
+    name='frainds',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
