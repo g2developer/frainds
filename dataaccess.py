@@ -8,7 +8,7 @@ class DataAccess:
     cmm_target_lst = None
 
     def __init__(self):
-        self.conn = sqlite3.connect('./data/config.db')
+        self.conn = sqlite3.connect('./data/frainds.db')
         self.get_command_list()
         self.get_command_target_list()
 
