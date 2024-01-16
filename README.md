@@ -51,5 +51,5 @@ python main.py
 - [SpeechRecognition](https://github.com/Uberi/speech_recognition)
 - [openai-whisper](https://github.com/openai/whisper)
 - Pyqt6
-
+- etc..
 
