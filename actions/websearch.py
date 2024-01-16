@@ -8,6 +8,8 @@ class WebSearch:
     eg_lst1 = ['google', '구글', 'googling']
     eg_lst2 = ['naver', '네이버']
     eg_lst3 = ['bing', '빙으로', '빙에서']
+    eg_lst4 = ['youtube', '유튜브', '유투브', '유튭으', '너튜브']
+    
 
     cmm_lst = ['찾아', '검색', 'search']
 
@@ -31,6 +33,8 @@ class WebSearch:
             url = f'https://search.naver.com/search.naver?query={keyword}'
         elif search_engine == 'bing':
             url = f'https://www.bing.com/search?q={keyword}'
+        elif search_engine == 'youtube':
+            url = f'https://www.youtube.com/results?search_query={keyword}'
 
         webbrowser.open(url)
 
@@ -58,5 +62,7 @@ class WebSearch:
             search_engine = 'naver'
         elif has(data, self.eg_lst3):
             search_engine = 'bing'
+        elif has(data, self.eg_lst4):
+            search_engine = 'youtube'
 
         return search_engine
