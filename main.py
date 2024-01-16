@@ -85,8 +85,10 @@ class Frainds:
         elif has(cmm_type, 'chat_ai'):
             if has(cmm_type, ['off', 'stop']):
                 self.set_keep_goning_chat(False)
-            else:
+            elif has(cmm_type, ['on', 'start']):
                 self.set_keep_goning_chat(True)
+            else:
+                # self.set_keep_goning_chat(True)
                 self.mainWindow.searchAi(data)
         elif cmm_type == 'search_web':
             self.websearch.action(data)
