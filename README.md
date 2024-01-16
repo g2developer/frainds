@@ -45,7 +45,7 @@ python main.py
 
 &nbsp;
 ### Test environment
-- python 3.8
+- python 3.8(64bit)
 
 ### Used lib and model
 - [SpeechRecognition](https://github.com/Uberi/speech_recognition)
