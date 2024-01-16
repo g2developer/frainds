@@ -1,4 +1,5 @@
 import os
+from sys import platform
 
 from dataaccess import DataAccess
 from utils import has
@@ -46,7 +47,12 @@ class Command:
         return cmm_type+'_'+cmm_target, txt
 
     def open_filebrowser(self, open_target=None):
-        my_path = '::{20D04FE0-3AEA-1069-A2D8-08002B30309D}'
+        my_path = ''
+        if platform.system() == 'Windows':
+            my_path = '::{20D04FE0-3AEA-1069-A2D8-08002B30309D}'
+        else :
+            my_path = os.path.expanduser('~/')
+
         if open_target == 'downfolder':
             my_path = os.path.expanduser('~/Downloads')
         os.startfile(my_path)
@@ -59,6 +65,6 @@ if __name__ == "__main__":
     # print(cmmtype, txt)
 
     my_path = os.path.expanduser('~/Downloads')
-    os.startfile('::{20D04FE0-3AEA-1069-A2D8-08002B30309D}')
+    os.startfile(os.path.expanduser('~/'))
     # lst = '다운로드폴더,다운로드 폴더,download foler,download directory,다운폴더'
     # print(has('다운로드 폴더 열어줘', lst.split(','), True))
