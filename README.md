@@ -53,5 +53,3 @@ python main.py
 - Pyqt6
 
 
-
-`pip install -r requirements.txt`
