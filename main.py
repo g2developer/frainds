@@ -87,6 +87,7 @@ class Frainds:
                 self.set_keep_goning_chat(False)
             elif has(cmm_type, ['on', 'start']):
                 self.set_keep_goning_chat(True)
+                self.mainWindow.activateWindow()
             else:
                 # self.set_keep_goning_chat(True)
                 self.mainWindow.searchAi(data)
