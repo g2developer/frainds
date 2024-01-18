@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
 
     chatai_list = None
     chatai = 'chatGPT'
-    chatai_url = 'https://chat.openai.com/'
+    chatai_url = 'https://chat.openai.com/gpts'
 
     dataAcc = None
 
@@ -132,7 +132,7 @@ class MainWindow(QMainWindow):
     def findInputLocation(self):
         x, y = self.get_textinput_position()
         w, h = self.get_window_size()
-        clickX = self.x() + w - x
+        clickX = self.x() + w - (w/2)
         clickY = self.y() + h - y
         pyautogui.moveTo(clickX, clickY)
         pyautogui.click()
